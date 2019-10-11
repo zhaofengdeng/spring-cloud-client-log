@@ -2,7 +2,20 @@ package com.framework.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.util.base.StringUtil;
+
 public class RequestUtil {
+	private RequestUtil() {
+	}
+
+	private static final Boolean isIP(String ip) {
+		if (StringUtil.isNullOrEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+			return false;
+		}
+		return true;
+
+	}
+
 	/**
 	 * 获取请求主机IP地址,如果通过代理进来，则透过防火墙获取真实IP地址;
 	 * 
@@ -10,22 +23,21 @@ public class RequestUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public final static String getIpAddress(HttpServletRequest request) {
+	public static final String getIpAddress(HttpServletRequest request) {
 		// 获取请求主机IP地址,如果通过代理进来，则透过防火墙获取真实IP地址
 		String ip = request.getHeader("X-Forwarded-For");
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			}
-			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		if (!isIP(ip)) {
+
+			if (!isIP(ip)) {
 				ip = request.getHeader("WL-Proxy-Client-IP");
 			}
-			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			if (!isIP(ip)) {
 				ip = request.getHeader("HTTP_CLIENT_IP");
 			}
-			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			if (!isIP(ip)) {
 				ip = request.getHeader("HTTP_X_FORWARDED_FOR");
 			}
-			if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			if (!isIP(ip)) {
 				ip = request.getRemoteAddr();
 			}
 		} else if (ip.length() > 15) {
